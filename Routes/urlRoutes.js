@@ -3,7 +3,7 @@ const { GetUrl, CreateUrl } = require("../Controllers/urlController");
 
 const UrlRoute=Router()
 
-UrlRoute.get('shorturl/:url',GetUrl);
+UrlRoute.get('/shorturl/:url',GetUrl);
 
 UrlRoute.post('/shorturl',CreateUrl);
 UrlRoute.use('/*',(req,res)=>{

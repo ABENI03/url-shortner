@@ -3,15 +3,15 @@
 <html>
 
 <head>
-    <title>URL Microservice | BY Abnezer Anbessie</title>
-    <link rel="icon" type="image/png" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link href="/style.css" rel="stylesheet" type="text/css" />
+  <title>URL Microservice | BY Abnezer Anbessie</title>
+  <link rel="icon" type="image/png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="/style.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
-    <!-- <h1>URL Shortener Microservice</h1>
+  <!-- <h1>URL Shortener Microservice</h1>
     <main>
       <section>
         <form action="api/shorturl" method="POST">
@@ -24,28 +24,77 @@
         </form>
       </section>
     </main> -->
-    <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="form">
-            <h1>URL Shortener Microservice</h1>
-            <main>
-                <section>
-                    <form action="api/shorturl" method="POST" >
-                        <fieldset>
-                            <legend>URL Shortener</legend>
-                            <label for="url_input">URL:</label>
-                            <input id="url_input" type="text" name="url" placeholder="https://www.arbega.com/" />
-                            <input type="submit" value="POST URL" />
-                        </fieldset>
-                    </form>
-                </section>
-            </main>
-            <footer>
-                <p>By <a href="https://github.com/ABENI03">Abnezer Anbessie</a></p>
-              </footer>
-        </div>
-        
+    
+  <div class="h-100 d-flex align-items-center justify-content-center">
+   
+    <div class="form">
+      <h1>URL Shortener</h1>
+      <div class="alert alert-danger" style="display:none" id="errorMessage" role="alert">
+        Error!
+      </div>
+      <div class="alert alert-success" id="successMessage" style="display:none" role="alert">
+       Success!
+      </div>
+      <main>
+        <section>
+          <!-- <form onsubmit="click()"> -->
+          <fieldset>
+            <!-- <legend>URL Shortener</legend> -->
+            <!-- <label for="url_input">URL:</label> -->
+            <input id="url_input" type="text" name="url" placeholder="https://www.arbega.com/" />
+            <div></div>
+            <button onclick="clicked()">Click</button>
+            <div></div>
+            <br>
+          </fieldset>
+          <!-- </form> -->
+        </section>
+      </main>
+      <footer>
+        <p class="poweredby">By <a href="https://github.com/ABENI03">Abnezer Anbessie</a></p>
+      </footer>
     </div>
 
+  </div>
+
 </body>
+<script>
+  function clicked() {
+    var value=document.getElementById("url_input").value;
+   var data={
+    "url":value
+   }
+    var errorDiv=document.getElementById("errorMessage");
+   
+    fetch('/api/shorturl', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        
+
+        if(data.status==404){
+          errorDiv.innerText=data.message
+          errorDiv.style.display="block";
+          
+        }
+        else{
+          var successMessage=document.getElementById("successMessage")
+          successMessage.innerHTML="Orignal Url : <a href='"+data.data.original_url+"'>"+data.data.original_url+"</a>  <br></br> short Url : <a href='/api/shorturl/"+ data.data.short_url+"'>"+data.data.short_url+"</a> ";
+          successMessage.style.display="block";
+        
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+  }
+
+</script>
 
 </html>

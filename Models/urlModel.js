@@ -9,22 +9,23 @@ const url_schema=new mongoose.Schema({
 const URL=new mongoose.model('URL',url_schema)
 
 
+const URLL = require("url").URL;
+
 const isValidUrl = urlString=> {
-    let url;
-    try { 
-          url =new URL(urlString); 
+  let url;
+  try { 
+        url =new URLL(urlString); 
     }
     catch(e){ 
       return false; 
     }
     return url.protocol === "http:" || url.protocol === "https:";
 }
-
 module.exports={
     getUrl:(data,callback)=>{
         try { 
             let url=data.params.url
-          
+            console.log(data.params)
             URL.findOne({short_url:url}).then((data)=>{
                     if(data){
                         return callback(null,data)
@@ -43,17 +44,23 @@ module.exports={
                res.status(500).json({ error: 'Server error..' });
             }
     },
-    createUrl:(req,callback)=>{
+    createUrl:async (req,callback)=>{
       
             var url=req.body.url
             var short=shortid.generate()
+          
+        
             if(!isValidUrl(url)){
              return callback({message:'invalid url'})
                  
             }
             else{
               try{
-             let  findone=  url.findOne({original_url:url})
+             let  findone= undefined;
+            await URL.findOne({original_url:url}).then((data)=>{
+              findone=data
+             })
+            
               if(findone){
                 return callback(null,{
                     original_url:findone.original_url,

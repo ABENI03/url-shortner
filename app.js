@@ -26,10 +26,12 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/Views/index.html')
   });
 app.use('/*',(req,res)=>{
-    res.status(404).json({
-        status:400,
-        message:"Requested Route is Not Found"
-    })
+   
+    res.sendFile(__dirname + '/Views/pageNotFound.html')
+    // res.status(404).json({
+    //     status:400,
+    //     message:"Requested Route is Not Found"
+    // })
 })
 const port=process.env.PORT
 app.listen(port,()=>{
