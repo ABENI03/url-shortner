@@ -25,7 +25,7 @@ module.exports={
     getUrl:(data,callback)=>{
         try { 
             let url=data.params.url
-            console.log(data.params)
+         
             URL.findOne({short_url:url}).then((data)=>{
                     if(data){
                         return callback(null,data)
